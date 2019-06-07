@@ -1,13 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+} from 'react-router-dom'
+import Characters from './Characters.js';
+import Home from './Home.js';
 
-function App() {
-  return (
-    <div>
-      <h3>hello there !!! 123</h3>
-    </div>
-  );
+class App extends React.Component {
+  render () {
+    return (
+      <div>
+        <Router>
+          <ul>
+            <li><Link to='/'>Home</Link></li>
+            <li><Link to='/Characters'>Books</Link></li>
+          </ul>
+          <hr />
+          <Route exact path='/' component={Home} />
+          <Route path='/Characters' component={Characters} />
+        </Router>
+      </div>
+    );
+  }
 }
 
 export default App;
