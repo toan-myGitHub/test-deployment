@@ -5,12 +5,15 @@ class ReadingList extends React.Component {
     render() {
         const bookList = this.props.books
             .map((book, idx) => {
+                
                 return (               
                   <BookCardReadingList                
                   image={book.book_image}
                       title={book.title}
                       author={book.author}
+                      publisher={book.publisher}
                       description={book.description}
+
                   onClick={this.props.onDeleteBook}
                   idx={idx}
                   key={idx}

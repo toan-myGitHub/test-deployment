@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class BookCard extends React.Component {
+export default class BookCardNonfiction extends React.Component {
     render() {
         const {title, 
             image, 
@@ -8,7 +8,7 @@ export default class BookCard extends React.Component {
             list_name,
             onClick, idx, buttonText} = this.props;
         return (           
-            <div class='Book-card'>                
+            <div class='Book-card-Nonfiction'>                
                 <div class="Book-container">
                     <img src={image} alt='' class='Book-img'></img>
                     <b>{title}</b>

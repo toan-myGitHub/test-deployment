@@ -8,8 +8,11 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-    datePeriod: '',
-    genre: '',
+    /* name, genre given defaults start value to prevent click submit/fetch fail  */ 
+    datePeriod: '2009-01-14',
+    genre: '/hardcover-fiction',
+    list_name: '',
+    results: [],
     bestSellers: [],
     selectedBooks: []
     };  
@@ -20,20 +23,19 @@ class App extends Component {
 };
 
 handleChange(event) {
-
   const target = event.target;
   const value = target.value;
   const name = target.name;
 
   this.setState({
+    /* name="datePeriod" or name="genre" */ 
     [name]: value
   });
-
-
 }
 
 handleSubmit(event) {
-  this.setState({datePeriod: event.target.value});
+  
+
   event.preventDefault();
 
   fetch(`https://api.nytimes.com/svc/books/v3/lists/${this.state.datePeriod}${this.state.genre}.json?api-key=Up8S84u5dVeZRGr1WvkNEaNmmmutSr2G`)
@@ -42,7 +44,8 @@ handleSubmit(event) {
   })
   .then(data =>  {
     this.setState({
-      bestSellers: data.results.books, 
+      bestSellers: data.results.books,
+      list_name: data.results.list_name,
       isLoading: false
     });
 
@@ -50,8 +53,6 @@ handleSubmit(event) {
   );
 
 }
-
-  
 
   selectBook = (idx) => {
     const selectedBook = this.state.bestSellers[idx];
@@ -69,7 +70,13 @@ handleSubmit(event) {
 
     this.setState(prevState => {
       return {
+        /*
+        selectedBook added to top of the list
+        selectedBooks: [selectedBook, ...prevState.selectedBooks]
+        selectedBook added at the end of the list
         selectedBooks: [...prevState.selectedBooks, selectedBook]
+        */
+        selectedBooks: [selectedBook, ...prevState.selectedBooks]
       };
     });
   }
@@ -103,21 +110,22 @@ handleSubmit(event) {
 <form onSubmit={this.handleSubmit}>
 
 
-<label>
+<label>Select Genre
         
           <select value={this.state.genre} name="genre" type="text" onChange={this.handleChange}>
           
             
-          <option value="">Select Genre</option>
+         
             <option value="/hardcover-fiction">Fiction</option>
             <option value="/hardcover-nonfiction">Nonfiction</option>
           </select>
         </label>
-        <label>
+        <br />
+        <label>Select Year
         
           <select value={this.state.datePeriod} name="datePeriod" type="number" onChange={this.handleChange}>
              
-          <option value="">Select Year</option>
+         
             <option value="2009-01-14">2009</option>
             <option value="2010-01-14">2010</option>
             <option value="2011-01-14">2011</option>
@@ -131,6 +139,7 @@ handleSubmit(event) {
             <option value="2019-01-14">2019</option>
           </select>
         </label>
+        <br />
         <input type="submit" value="Submit" />
       </form>
       <br />
@@ -140,12 +149,14 @@ handleSubmit(event) {
  <ReadingList
           books={this.state.selectedBooks}
           onDeleteBook={this.deleteBook}
+
         />
   </div>
 
   <div class="books">
    <BookList
           books={this.state.bestSellers}
+          list_name={this.state.list_name}
         onSelectBook={this.selectBook}
         />
   </div>
